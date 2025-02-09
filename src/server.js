@@ -2,20 +2,18 @@ const express = require("express");
 const AWS = require("aws-sdk");
 const cors = require("cors");
 
-// Initialize Express
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Configure AWS SDK
+//Configure AWS 
 AWS.config.update({
-  region: "ap-south-1", // Change this to your AWS region
+  region: "ap-south-1", 
 });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = "ClickEvents"; 
 
-// API Endpoint to Log Clicks
 app.post("/clicks", async (req, res) => {
   const { id, button, timestamp, pageUrl, device, location } = req.body;
 
@@ -47,7 +45,6 @@ app.post("/clicks", async (req, res) => {
   }
 });
 
-// Start Server
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
