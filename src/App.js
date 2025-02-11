@@ -70,7 +70,7 @@ function App() {
     const now = new Date();
     const istOffset = 5.5 * 60 * 60 * 1000;
     const istTime = new Date(now.getTime() + istOffset);
-    const istTimeStamp = istTime.toISOString();
+    const istTimeStamp = istTime.toISOString().slice(0, 19);
 
     try {
       await axios.post("http://localhost:5000/clicks", {
