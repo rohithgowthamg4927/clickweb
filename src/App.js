@@ -80,7 +80,7 @@ function App() {
     const istTimeStamp = istTime.toISOString().slice(0, 19);
 
     try{
-      await axios.post("http://localhost:5000/clicks", {
+      await axios.post("http://15.207.109.203:5000/clicks", {
         id: crypto.randomUUID(),
         button: buttonName,
         timestamp: istTimeStamp,

@@ -6,13 +6,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-//Configure AWS 
+// Configure AWS
 AWS.config.update({
-  region: "ap-south-1", 
+  region: "ap-south-1",
 });
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = "ClickEvents"; 
+const TABLE_NAME = "ClickEvents";
 
 app.post("/clicks", async (req, res) => {
   const { id, button, timestamp, pageUrl, device, location } = req.body;
