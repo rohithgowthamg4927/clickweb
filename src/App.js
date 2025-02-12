@@ -6,6 +6,10 @@ const buttonUrls = {
   Google: "https://www.google.com",
   YouTube: "https://www.youtube.com",
   Netflix: "https://www.netflix.com",
+  AWS: "https://aws.amazon.com",
+  GitHub: "https://github.com",
+  LinkedIn: "https://www.linkedin.com",
+  Medium: "https://medium.com",
 };
 
 // Function to get device details
@@ -16,7 +20,8 @@ const getDeviceInfo = () => {
   let deviceType = "Desktop";
   if (/Mobi|Android|iPhone/i.test(userAgent)) {
     deviceType = "Mobile";
-  } else if (/iPad|Tablet/i.test(userAgent)) {
+  } 
+  else if (/iPad|Tablet/i.test(userAgent)) {
     deviceType = "Tablet";
   }
 
@@ -34,7 +39,7 @@ const getLocation = async () => {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          try {
+          try{
             const response = await fetch(
               `https://geocode.xyz/${latitude},${longitude}?geoit=json`
             );
@@ -43,7 +48,8 @@ const getLocation = async () => {
               city: data.city || "Unknown",
               country: data.country || "Unknown",
             });
-          } catch (error) {
+          } 
+          catch(error){
             console.error("Error fetching location:", error);
             resolve({ city: "Unknown", country: "Unknown" });
           }
@@ -53,7 +59,8 @@ const getLocation = async () => {
           resolve({ city: "Unknown", country: "Unknown" });
         }
       );
-    } else {
+    } 
+    else{
       console.warn("Geolocation not supported.");
       resolve({ city: "Unknown", country: "Unknown" });
     }
@@ -72,7 +79,7 @@ function App() {
     const istTime = new Date(now.getTime() + istOffset);
     const istTimeStamp = istTime.toISOString().slice(0, 19);
 
-    try {
+    try{
       await axios.post("http://localhost:5000/clicks", {
         id: crypto.randomUUID(),
         button: buttonName,
@@ -82,20 +89,25 @@ function App() {
         location: location,
       });
 
-      setMessage(`Click logged successfully for ${buttonName} at ${istTimeStamp} from ${location.city}, ${location.country}`);
+      setMessage(`Click logged successfully for ${buttonName} at ${istTimeStamp} IST`);
       window.open(buttonUrls[buttonName], "_blank");
-    } catch (error) {
+    } 
+    catch(error){
       console.error("Error sending click data:", error);
       setMessage("Failed to log click");
     }
   };
 
-  return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+  return(
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1>Click Tracker</h1>
       <button onClick={() => handleClick("Google")}>Google</button>
       <button onClick={() => handleClick("YouTube")}>YouTube</button>
       <button onClick={() => handleClick("Netflix")}>Netflix</button>
+      <button onClick={() => handleClick("AWS")}>AWS</button>
+      <button onClick={() => handleClick("GitHub")}>GitHub</button>
+      <button onClick={() => handleClick("LinkedIn")}>LinkedIn</button>
+      <button onClick={() => handleClick("Medium")}>Medium</button>
       <p style={{ color: message.includes("successfully") ? "green" : "red" }}>{message}</p>
     </div>
   );
