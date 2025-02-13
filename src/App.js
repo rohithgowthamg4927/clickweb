@@ -12,7 +12,6 @@ const buttonUrls = {
   Medium: "https://medium.com",
 };
 
-// Function to get device details
 const getDeviceInfo = () => {
   const userAgent = navigator.userAgent;
   const platform = navigator.platform;
@@ -32,8 +31,8 @@ const getDeviceInfo = () => {
 };
 
 function App() {
-  const [message, setMessage] = useState(""); // State to store status messages
-  const [messageColor, setMessageColor] = useState("black"); // State to store message color
+  const [message, setMessage] = useState(""); 
+  const [messageColor, setMessageColor] = useState("black"); 
 
   const logClick = async (buttonName, location) => {
     const deviceInfo = getDeviceInfo();
@@ -41,9 +40,6 @@ function App() {
     const istOffset = 5.5 * 60 * 60 * 1000;
     const istTime = new Date(now.getTime() + istOffset);
     const istTimeStamp = istTime.toISOString().slice(0, 19);
-
-    console.log(`Click detected for ${buttonName} at ${istTimeStamp} IST`);
-    setMessage(`Click detected for ${buttonName} at ${istTimeStamp} IST...`);
     setMessageColor("black");
 
     try {
@@ -56,12 +52,13 @@ function App() {
         location: location,
       });
 
-      console.log(`Click logged successfully for ${buttonName} at ${istTimeStamp} IST`);
       setMessage(`Click logged successfully for ${buttonName} at ${istTimeStamp} IST`);
       setMessageColor("green");
-    } catch (error) {
+    }
+
+    catch (error) {
       console.error("Error sending click data:", error);
-      setMessage(`Failed to log click for ${buttonName}. Please try again.`);
+      setMessage(`Failed to log click for ${buttonName}.`);
       setMessageColor("red");
     }
   };
