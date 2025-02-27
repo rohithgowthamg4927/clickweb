@@ -107,7 +107,7 @@ function App() {
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1>Click Tracker!</h1>
+      <h1>ClickStream Tracker!</h1>
       {Object.keys(buttonUrls).map((name) => (
         <button key={name} onClick={() => handleClick(name)} style={{ margin: "5px" }}>
           {name}
