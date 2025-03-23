@@ -63,47 +63,48 @@ function App() {
     }
   };
 
-  const handleClick = (buttonName) => {
-    const url = buttonUrls[buttonName];
-    window.open(url, "_blank");
+const handleClick = (buttonName) => {
+  const url = buttonUrls[buttonName];
 
-    if (!navigator.geolocation) {
-      console.warn("Geolocation not supported.");
+  if (!navigator.geolocation) {
+    console.warn("Geolocation not supported.");
+    logClick(buttonName, { city: "Unknown", country: "Unknown" });
+    return;
+  }
+
+  navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+    if (permissionStatus.state === "denied") {
+      console.warn("Location access denied previously.");
       logClick(buttonName, { city: "Unknown", country: "Unknown" });
       return;
     }
 
-    navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
-      if (permissionStatus.state === "denied") {
-        console.warn("Location access denied previously.");
-        logClick(buttonName, { city: "Unknown", country: "Unknown" });
-        return;
-      }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        let location = { city: "Unknown", country: "Unknown" };
 
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          let location = { city: "Unknown", country: "Unknown" };
-
-          try {
-            const response = await fetch(
-              `https://geocode.xyz/${latitude},${longitude}?geoit=json`
-            );
-            const data = await response.json();
-            location = { city: data.city || "Unknown", country: data.country || "Unknown" };
-          } catch (error) {
-            console.error("Error fetching location:", error);
-          }
-
-          logClick(buttonName, location);
-        },
-        (error) => {
-          console.warn("Location permission denied or error:", error);
-          logClick(buttonName, { city: "Unknown", country: "Unknown" });
+        try {
+          const response = await fetch(
+            `https://geocode.xyz/${latitude},${longitude}?geoit=json`
+          );
+          const data = await response.json();
+          location = { city: data.city || "Unknown", country: data.country || "Unknown" };
+        } catch (error) {
+          console.error("Error fetching location:", error);
         }
-      );
-    });
-  };
+
+        logClick(buttonName, location);
+        window.open(url, "_blank"); // Move this line here
+      },
+      (error) => {
+        console.warn("Location permission denied or error:", error);
+        logClick(buttonName, { city: "Unknown", country: "Unknown" });
+        window.open(url, "_blank"); // Move this line here
+      }
+    );
+  });
+};
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
