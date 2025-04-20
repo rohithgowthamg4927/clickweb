@@ -95,12 +95,11 @@ const handleClick = (buttonName) => {
         }
 
         logClick(buttonName, location);
-        window.open(url, "_blank"); // Move this line here
-      },
+        window.open(url, "_blank");
       (error) => {
         console.warn("Location permission denied or error:", error);
         logClick(buttonName, { city: "Unknown", country: "Unknown" });
-        window.open(url, "_blank"); // Move this line here
+        window.open(url, "_blank"); 
       }
     );
   });
