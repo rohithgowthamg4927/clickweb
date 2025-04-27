@@ -12,6 +12,9 @@ const buttonUrls = {
   Medium: "https://medium.com",
 };
 
+// Your BigDataCloud API key
+const BIG_DATA_CLOUD_API_KEY = process.env.REACT_APP_BIG_DATA_CLOUD_API_KEY;
+
 const getDeviceInfo = () => {
   const userAgent = navigator.userAgent;
   const platform = navigator.platform;
@@ -31,8 +34,10 @@ const getDeviceInfo = () => {
 };
 
 function App() {
-  const [message, setMessage] = useState(""); 
-  const [messageColor, setMessageColor] = useState("black"); 
+  const [message, setMessage] = useState("");
+  const [messageColor, setMessageColor] = useState("black");
+  const [loading, setLoading] = useState(false);
+  const [currentButton, setCurrentButton] = useState(null);
 
   const logClick = async (buttonName, location) => {
     const deviceInfo = getDeviceInfo();
@@ -43,7 +48,7 @@ function App() {
     setMessageColor("black");
 
     try {
-      await axios.post("https://api.rohithgowthamg.cloud/clicks", {
+      await axios.post("http://localhost:5000/clicks", {
         id: crypto.randomUUID(),
         button: buttonName,
         timestamp: istTimeStamp,
@@ -54,66 +59,94 @@ function App() {
 
       setMessage(`Click logged successfully for ${buttonName} at ${istTimeStamp} IST`);
       setMessageColor("green");
-    }
-
-    catch (error) {
+    } catch (error) {
       console.error("Error sending click data:", error);
       setMessage(`Failed to log click for ${buttonName}.`);
       setMessageColor("red");
     }
   };
 
-const handleClick = (buttonName) => {
-  const url = buttonUrls[buttonName];
+  const handleClick = (buttonName) => {
+    const url = buttonUrls[buttonName];
+    setLoading(true);
+    setCurrentButton(buttonName);
+    setMessage("");
 
-  if (!navigator.geolocation) {
-    console.warn("Geolocation not supported.");
-    logClick(buttonName, { city: "Unknown", country: "Unknown" });
-    return;
-  }
+    // Start a 3-second timer immediately
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
 
-  navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
-    if (permissionStatus.state === "denied") {
-      console.warn("Location access denied previously.");
-      logClick(buttonName, { city: "Unknown", country: "Unknown" });
-      return;
-    }
+    // Use Promise.all to wait for both the click logging and the 3-second timer
+    const processClick = async () => {
+      if (!navigator.geolocation) {
+        console.warn("Geolocation not supported.");
+        await logClick(buttonName, { city: "Unknown", country: "Unknown" });
+        return;
+      }
 
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
+      const permissionStatus = await navigator.permissions.query({ name: "geolocation" });
+      if (permissionStatus.state === "denied") {
+        console.warn("Location access denied.");
+        await logClick(buttonName, { city: "Unknown", country: "Unknown" });
+        return;
+      }
+
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
+
         const { latitude, longitude } = position.coords;
         let location = { city: "Unknown", country: "Unknown" };
 
         try {
           const response = await fetch(
-            `https://geocode.xyz/${latitude},${longitude}?geoit=json`
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en&key=${BIG_DATA_CLOUD_API_KEY}`
           );
           const data = await response.json();
-          location = { city: data.city || "Unknown", country: data.country || "Unknown" };
+          location = { 
+            city: data.city || "Unknown", 
+            country: data.countryName || "Unknown" 
+          };
         } catch (error) {
-          console.error("Error fetching location:", error);
+          console.error("Error fetching location from BigDataCloud:", error);
         }
 
-        logClick(buttonName, location);
-        window.open(url, "_blank");
-      (error) => {
+        await logClick(buttonName, location);
+      } catch (error) {
         console.warn("Location permission denied or error:", error);
-        logClick(buttonName, { city: "Unknown", country: "Unknown" });
-        window.open(url, "_blank"); 
+        await logClick(buttonName, { city: "Unknown", country: "Unknown" });
       }
-    );
-  });
-};
+    };
+
+    // Process the click but don't open the URL until loading is done
+    processClick().then(() => {
+      // The URL will open after the 3-second loading period
+      setTimeout(() => {
+        window.open(url, "_blank");
+      }, 3000);
+    });
+  };
 
   return (
     <div style={{ textAlign: "center", marginTop: "100px" }}>
       <h1>ClickStream Tracker</h1>
+
       {Object.keys(buttonUrls).map((name) => (
         <button key={name} onClick={() => handleClick(name)} style={{ margin: "5px" }}>
           {name}
         </button>
       ))}
-      {message && (
+
+      {loading && (
+        <div style={{ marginTop: "20px" }}>
+          <div className="spinner"></div>
+          <p style={{ fontSize: "18px", color: "blue" }}>Logging your click for {currentButton}</p>
+        </div>
+      )}
+
+      {!loading && message && (
         <p style={{ marginTop: "20px", fontSize: "18px", color: messageColor }}>
           {message}
         </p>

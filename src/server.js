@@ -1,17 +1,23 @@
-const express = require("express");
-const AWS = require("aws-sdk");
-const cors = require("cors");
+import 'dotenv/config';
+import express from "express";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Configure AWS
-AWS.config.update({
+// Configure AWS with explicit credentials
+const client = new DynamoDBClient({
   region: "ap-south-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
 });
 
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
+const dynamoDB = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = "ClickEvents";
 
 app.post("/clicks", async (req, res) => {
@@ -37,7 +43,7 @@ app.post("/clicks", async (req, res) => {
   };
 
   try {
-    await dynamoDB.put(params).promise();
+    await dynamoDB.send(new PutCommand(params));
     res.json({ message: "Click logged successfully" });
   } catch (error) {
     console.error("DynamoDB Error:", error);
