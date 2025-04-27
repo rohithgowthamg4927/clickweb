@@ -12,7 +12,6 @@ const buttonUrls = {
   Medium: "https://medium.com",
 };
 
-// Your BigDataCloud API key
 const BIG_DATA_CLOUD_API_KEY = process.env.REACT_APP_BIG_DATA_CLOUD_API_KEY;
 
 const getDeviceInfo = () => {
@@ -120,9 +119,7 @@ function App() {
       }
     };
 
-    // Process the click but don't open the URL until loading is done
     processClick().then(() => {
-      // The URL will open after the 3-second loading period
       setTimeout(() => {
         window.open(url, "_blank");
       }, 3000);
