@@ -9,13 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 // Configure AWS with explicit credentials
-const client = new DynamoDBClient({
-  region: "ap-south-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  }
-});
+const client = new DynamoDBClient();
 
 const dynamoDB = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = "ClickEvents";
@@ -49,6 +43,11 @@ app.post("/clicks", async (req, res) => {
     console.error("DynamoDB Error:", error);
     res.status(500).json({ error: "Could not log click" });
   }
+});
+
+app.get("/health", (req, res) => {
+  const timestamp = new Date().toISOString();
+  res.json({ status: "Server healthy", timestamp });
 });
 
 const PORT = 5000;
