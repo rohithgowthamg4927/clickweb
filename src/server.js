@@ -47,7 +47,7 @@ app.post("/clicks", async (req, res) => {
 
 app.get("/health", (req, res) => {
   const timestamp = new Date().toISOString();
-  res.json({ status: "Server healthy", timestamp });
+  res.status(200).json({ status: "Server healthy", timestamp });
 });
 
 const PORT = 5000;
