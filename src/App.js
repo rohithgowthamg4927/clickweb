@@ -47,7 +47,7 @@ function App() {
     setMessageColor("black");
 
     try {
-      await axios.post("http://localhost:5000/clicks", {
+      await axios.post("https://api.rohithgowthamg.cloud/clicks", {
         id: crypto.randomUUID(),
         button: buttonName,
         timestamp: istTimeStamp,
