@@ -70,13 +70,12 @@ function App() {
     setLoading(true);
     setCurrentButton(buttonName);
     setMessage("");
-
-    // Start a 3-second timer immediately
+    
+    //start 3 sec timer for loading
     setTimeout(() => {
       setLoading(false);
     }, 3000);
 
-    // Use Promise.all to wait for both the click logging and the 3-second timer
     const processClick = async () => {
       if (!navigator.geolocation) {
         console.warn("Geolocation not supported.");
