@@ -12,7 +12,7 @@ const buttonUrls = {
   Medium: "https://medium.com",
 };
 
-const BIG_DATA_CLOUD_API_KEY = process.env.CLOUD_API_KEY;
+const BIG_DATA_CLOUD_API_KEY = process.env.REACT_APP_CLOUD_API_KEY;
 
 const getDeviceInfo = () => {
   const userAgent = navigator.userAgent;
