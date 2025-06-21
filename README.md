@@ -3,7 +3,7 @@
 > **Enterprise-grade serverless clickstream analytics pipeline leveraging 11 AWS services for real-time user behavior tracking and visualization**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-click.rohithgowthamg.cloud-0066CC?style=for-the-badge&logo=amazonaws)](https://click.rohithgowthamg.cloud)
-[![Blog Award](https://img.shields.io/badge/Blog_Award-5th_Place_National_Blogathon-gold?style=for-the-badge&logo=hashnode)](https://rohithgowthamg.hashnode.dev/building-a-serverless-clickstream-analytics-pipeline-on-aws)
+[![Blog](https://img.shields.io/badge/Blog_Award-5th_Place_National_Blogathon-gold?style=for-the-badge&logo=hashnode)](https://rohithgowthamg.hashnode.dev/building-a-serverless-clickstream-analytics-pipeline-on-aws)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![AWS Services](https://img.shields.io/badge/AWS_Services-11_Integrated-FF9900?style=for-the-badge&logo=amazon-aws)](https://aws.amazon.com/)
 [![Serverless](https://img.shields.io/badge/Architecture-100%25_Serverless-success?style=for-the-badge)](https://aws.amazon.com/serverless/)
@@ -164,7 +164,7 @@ def lambda_handler(event, context):
     parquet_buffer = convert_to_parquet(df)
     
     # Store in partitioned S3 data lake
-    s3_key = f"year={year}/month={month}/day={day}/export.parquet"
+    s3_key = f"year={year}/month={month}/day={day}/dynamodb_export.parquet"
     s3.put_object(Bucket=BUCKET, Key=s3_key, Body=parquet_buffer)
 ```
 
@@ -342,10 +342,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Contact
 
-**Rohith Gowtham G** - Cloud Solutions Architect
+**Rohith Gowtham G** - Cloud Engineer
 
 - **Portfolio**: [rohithgowthamg.cloud](https://rohithgowthamg.cloud)
-- **Technical Blog**: [hashnode.dev/@rohithgowthamg](https://rohithgowthamg.hashnode.dev)
+- **Technical Blog**: [hashnode.dev/@rohithgowthamg](https://rohithgowthamg.hashnode.dev/building-a-serverless-clickstream-analytics-pipeline-on-aws)
 - **Project Demo**: [click.rohithgowthamg.cloud](https://click.rohithgowthamg.cloud)
 
-*Demonstrating enterprise-grade serverless architecture with complete automation and cost optimization*
