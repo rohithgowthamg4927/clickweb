@@ -1,4 +1,4 @@
-# ClickStream Analytics
+# Serverless ClickStream Analytics Pipeline
 
 > **Enterprise-grade serverless clickstream analytics pipeline leveraging 11 AWS services for real-time user behavior tracking and visualization**
 
