@@ -10,9 +10,9 @@ def lambda_handler(event, context):
         response = client.start_query_execution(
             QueryString='MSCK REPAIR TABLE clickevents',
             QueryExecutionContext={
-                'Database': 'clickevents-db'
+                'Database': 'clickevents-db'  #database is from AWS Glue
             },
-            WorkGroup='clickevents-wg'
+            WorkGroup='clickevents-wg'  #Amazon Athena workgroup
         )
         
         query_execution_id = response['QueryExecutionId']
