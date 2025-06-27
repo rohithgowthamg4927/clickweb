@@ -8,12 +8,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Configure AWS with explicit credentials
+//Configure AWS
 const client = new DynamoDBClient();
 
 const dynamoDB = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = "ClickEvents";
 
+//API
 app.post("/clicks", async (req, res) => {
   const { id, button, timestamp, pageUrl, device, location } = req.body;
 
@@ -45,6 +46,7 @@ app.post("/clicks", async (req, res) => {
   }
 });
 
+//Health check API
 app.get("/health", (req, res) => {
   const timestamp = new Date().toISOString();
   res.status(200).json({ status: "Server healthy", timestamp });
