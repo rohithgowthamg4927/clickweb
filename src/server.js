@@ -40,7 +40,8 @@ app.post("/clicks", async (req, res) => {
   try {
     await dynamoDB.send(new PutCommand(params));
     res.json({ message: "Click logged successfully" });
-  } catch (error) {
+  } 
+  catch (error) {
     console.error("DynamoDB Error:", error);
     res.status(500).json({ error: "Could not log click" });
   }
