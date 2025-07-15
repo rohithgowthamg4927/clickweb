@@ -19,9 +19,11 @@ const getDeviceInfo = () => {
   const platform = navigator.platform;
 
   let deviceType = "Desktop";
+  
   if (/Mobi|Android|iPhone|iPad|iPod/i.test(userAgent) || /iPhone|iPad|iPod/.test(platform)) {
     deviceType = "Mobile";
-  } else if (/Tablet|iPad/i.test(userAgent)) {
+  } 
+  else if (/Tablet|iPad/i.test(userAgent)) {
     deviceType = "Tablet";
   }
 
