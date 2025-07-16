@@ -18,6 +18,8 @@ jobs:
 
       - name: Build the project.
         run: npm run build
+        env:
+          REACT_APP_CLOUD_API_KEY: ${{ secrets.REACT_APP_CLOUD_API_KEY }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
